@@ -11,6 +11,6 @@ deployments:
     template: lambda
     contentDirectory: production-metrics-lambdas
     parameters:
-      filename: production-metrics-lambdas.zip
+      fileName: production-metrics-lambdas.zip
       functionNames:
        - "production-metrics-flexible-api-"
