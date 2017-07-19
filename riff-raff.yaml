@@ -1,0 +1,16 @@
+regions: [eu-west-1]
+stacks: [flexible]
+templates:
+  lambda:
+    type: aws-lambda
+    parameters:
+      bucket: composer-dist
+      prefixStack: false
+deployments:
+  production-metrics-lambdas:
+    template: lambda
+    contentDirectory: production-metrics-lambdas
+    parameters:
+      filename: production-metrics-lambdas.zip
+      functionNames:
+       - "production-metrics-flexible-api-"
