@@ -13,4 +13,4 @@ deployments:
     parameters:
       fileName: production-metrics-lambdas.zip
       functionNames:
-       - "flexible-production-metrics-lambdas-PROD-query-flexible-api"
+       - "flexible-production-metrics-lambdas-query-flexible-api-"
