@@ -5,11 +5,12 @@ import com.amazonaws.services.cloudwatch.model.{Dimension, MetricDatum, PutMetri
 import metricsLambdas.aws.AWSClientFactory
 
 
-class FlexibleApiMetrics {
+class CapiMetricsLambda extends Logging{
 
   def run(): Unit = {
     val cloudWatchClient = AWSClientFactory.createCloudWatchClient
     putMetricsData(cloudWatchClient)
+    log.info("Running the Capi Metrics Lambda.")
   }
 
   def putMetricsData(client: AmazonCloudWatch) = {
