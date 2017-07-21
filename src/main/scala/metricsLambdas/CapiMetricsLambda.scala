@@ -1,14 +1,20 @@
 package metricsLambdas
 
+import java.util.{Map => JMap}
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch
 import com.amazonaws.services.cloudwatch.model.{Dimension, MetricDatum, PutMetricDataRequest, StandardUnit}
-import metricsLambdas.aws.AWSClientFactory
+import com.amazonaws.services.lambda.runtime.Context
 
 
 class CapiMetricsLambda extends Logging{
 
-  def run(): Unit = {
-    val cloudWatchClient = AWSClientFactory.createCloudWatchClient
+  def run(event: JMap[String, Object], context: Context): Unit = {
+    collectMetrics
+  }
+
+  def collectMetrics = {
+
+    val cloudWatchClient = Config.cloudwatchClient
     putMetricsData(cloudWatchClient)
     log.info("Running the Capi Metrics Lambda.")
   }
@@ -22,5 +28,4 @@ class CapiMetricsLambda extends Logging{
 
     client.putMetricData(new PutMetricDataRequest().withNamespace("ProductionMetricsLambdaFlexible").withMetricData(data))
   }
-
 }
