@@ -2,12 +2,10 @@ package metricsLambdas
 
 import java.util.Properties
 
-import com.amazonaws.ClientConfiguration
 import com.amazonaws.auth.{AWSCredentialsProviderChain, EnvironmentVariableCredentialsProvider, InstanceProfileCredentialsProvider}
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.regions.Regions
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
+import resources.AWSClientFactory._
 
 import scala.util.Try
 
@@ -23,14 +21,11 @@ object Config {
     new InstanceProfileCredentialsProvider(false)
   )
 
-  val cloudwatchClient = AmazonCloudWatchClientBuilder.standard().withRegion(region).withCredentials(awsCredentialsProvider).withClientConfiguration(new ClientConfiguration()).build()
-  val s3Client = AmazonS3ClientBuilder.standard().withRegion(region).withCredentials(awsCredentialsProvider).build()
-
   val capiUrl = getConfig("capi.live.internal.url")
   val capiKey = getConfig("capi.key")
 
   private def loadConfig = {
-
+    val s3Client = createS3Client(region, awsCredentialsProvider)
     val configPath = "production-metrics-lambdas/config.properties"
     val configInputStream = s3Client.getObject("guconf-flexible", configPath)
     val context = configInputStream.getObjectContent
