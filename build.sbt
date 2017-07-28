@@ -12,7 +12,13 @@ libraryDependencies ++= Seq(
   "com.amazonaws" % "aws-java-sdk-s3" % "1.11.163",
   "com.amazonaws" % "aws-java-sdk-config" %  "1.11.163",
   "com.amazonaws" % "aws-lambda-java-log4j" % "1.0.0",
-  "org.slf4j" % "slf4j-log4j12" % "1.7.25"
+  "org.slf4j" % "slf4j-log4j12" % "1.7.25",
+  "com.typesafe.play" %% "play-ws" % "2.5.16",
+  "io.circe" %% "circe-parser" % "0.7.0",
+  "io.circe" %% "circe-generic" % "0.7.0",
+  "com.beachape" %% "enumeratum-circe" % "1.5.14",
+  "com.amazonaws" % "amazon-kinesis-client" % "1.7.6",
+  "com.gu" %% "editorial-production-metrics-models-lib" % "0.1-SNAPSHOT"
 )
 
 enablePlugins(JavaAppPackaging, RiffRaffArtifact)

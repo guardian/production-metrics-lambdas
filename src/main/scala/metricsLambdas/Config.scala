@@ -24,6 +24,9 @@ object Config {
   val capiUrl = getConfig("capi.live.internal.url")
   val capiKey = getConfig("capi.key")
 
+
+  val kinesisStreamName = getConfig("kinesis.publishingMetricsStream")
+
   private def loadConfig = {
     val s3Client = createS3Client(region, awsCredentialsProvider)
     val configPath = "production-metrics-lambdas/config.properties"
