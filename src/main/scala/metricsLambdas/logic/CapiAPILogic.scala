@@ -60,7 +60,7 @@ object CapiAPILogic extends Logging {
   }
 
   def postArticlesToKinesis(events: Seq[KinesisEvent]) = {
-    log.info(s"Number of articles with commissioning desks: ${events.length}")
+    log.info(s"Number of articles processed: ${events.length}")
     events.map(KinesisWriter.write)
   }
 
@@ -82,7 +82,9 @@ object CapiAPILogic extends Logging {
         commissioningDesk = commissioningDesk,
         originatingSystem = startingSystem)
 
-    capiData.fold[Option[KinesisEvent]](None)(data => Some(KinesisEvent(CapiContent, data.asJson)))
+    capiData.fold[Option[KinesisEvent]]({
+      log.info(s"Failed to transform CAPI article to CapiData with ID: ${article.id}")
+      None})(data => Some(KinesisEvent(CapiContent, data.asJson)))
   }
 
   def getTagByType(tags: Seq[Tag], tagType: TagType): Option[String] =
