@@ -31,7 +31,7 @@ object CapiAPILogic extends Logging {
   }
 
   def get24HourTimePeriod: TimePeriod = {
-    val endDate = new DateTime(DateTimeZone.forID("GMT")).withTimeAtStartOfDay()
+    val endDate = new DateTime(DateTimeZone.UTC).withTimeAtStartOfDay()
     val startDate = endDate.minusDays(1)
     TimePeriod(startDate, endDate)
   }
