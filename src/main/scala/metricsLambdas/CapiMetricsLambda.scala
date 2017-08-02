@@ -17,8 +17,8 @@ class CapiMetricsLambda extends Logging{
   def collectMetrics = {
     val cloudWatchClient = AWSClientFactory.createCloudWatchClient
     putMetricsData(cloudWatchClient)
-    log.info("Running the Capi Metrics Lambda.")
     CapiAPILogic.collectYesterdaysCapiData
+    log.info("Running the Capi Metrics Lambda.")
   }
 
   def putMetricsData(client: AmazonCloudWatch) = {

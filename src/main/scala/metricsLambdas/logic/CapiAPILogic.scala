@@ -54,10 +54,15 @@ object CapiAPILogic extends Logging {
     Await.ready(response, 300 seconds)
   }
 
-  def transformArticlesToKinesisEvents(articles: Seq[Content]): Seq[KinesisEvent] = articles.flatMap(transform)
+  def transformArticlesToKinesisEvents(articles: Seq[Content]): Seq[KinesisEvent] = {
+    log.info(s"Total number of articles: ${articles.length}")
+    articles.flatMap(transform)
+  }
 
-  def postArticlesToKinesis(events: Seq[KinesisEvent]) = events.map(KinesisWriter.write)
-
+  def postArticlesToKinesis(events: Seq[KinesisEvent]) = {
+    log.info(s"Number of articles with commissioning desks: ${events.length}")
+    events.map(KinesisWriter.write)
+  }
 
   def transform(article: Content): Option[KinesisEvent] = {
     val capiData = for {
