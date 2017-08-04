@@ -10,7 +10,7 @@ import io.circe.generic.auto._
 import metricsLambdas.resources.AWSClientFactory
 import Config._
 
-object KinesisWriter {
+object KinesisWriter extends Logging {
 
   lazy val client = AWSClientFactory.createKinesisClient
 
@@ -27,7 +27,11 @@ object KinesisWriter {
     request.setPartitionKey(partitionKey)
     request.setStreamName(kinesisStreamName)
     request.setData(streamEvent)
-    client.putRecord(request)
+    try {
+      client.putRecord(request)
+    } catch {
+      case e => log.error(s"Could not post to kinesis stream ${e.getMessage} ${e.getStackTrace}")
+    }
   }
 
 }
