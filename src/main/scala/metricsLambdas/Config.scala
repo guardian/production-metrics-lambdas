@@ -2,7 +2,7 @@ package metricsLambdas
 
 import java.util.Properties
 
-import com.amazonaws.auth.{AWSCredentialsProviderChain, EnvironmentVariableCredentialsProvider, InstanceProfileCredentialsProvider}
+import com.amazonaws.auth.{AWSCredentialsProviderChain, DefaultAWSCredentialsProviderChain, EnvironmentVariableCredentialsProvider, InstanceProfileCredentialsProvider}
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.regions.Regions
 import resources.AWSClientFactory._
@@ -18,7 +18,8 @@ object Config {
   val awsCredentialsProvider = new AWSCredentialsProviderChain(
     new EnvironmentVariableCredentialsProvider(),
     new ProfileCredentialsProvider("composer"),
-    new InstanceProfileCredentialsProvider(false)
+    new InstanceProfileCredentialsProvider(false),
+    new DefaultAWSCredentialsProviderChain
   )
 
   val capiUrl = getConfig("capi.live.internal.url")
