@@ -26,7 +26,8 @@ object Config {
   val capiKey = getConfig("capi.key")
 
 
-  val kinesisStreamName = getConfig("kinesis.publishingMetricsStream")
+  val kinesisStreamNamePROD = getConfig("kinesis.publishingMetricsStreamPROD")
+  val kinesisStreamNameDEV = getConfig("kinesis.publishingMetricsStreamDEV")
 
   private def loadConfig = {
     val s3Client = createS3Client(region, awsCredentialsProvider)

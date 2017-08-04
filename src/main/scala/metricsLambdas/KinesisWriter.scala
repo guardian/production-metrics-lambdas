@@ -17,10 +17,11 @@ object KinesisWriter extends Logging {
   def write(event: KinesisEvent) = {
     val eventJson = event.asJson
     val eventString = eventJson.toString()
-    postToKinesis(eventString)
+    postToKinesis(eventString, kinesisStreamNamePROD)
+    postToKinesis(eventString, kinesisStreamNameDEV)
   }
 
-  private def postToKinesis(event: String) = {
+  private def postToKinesis(event: String, kinesisStreamName: String) = {
     val streamEvent: ByteBuffer = ByteBuffer.wrap(event.getBytes)
     val partitionKey = UUID.randomUUID().toString
     val request: PutRecordRequest = new PutRecordRequest()
@@ -30,7 +31,7 @@ object KinesisWriter extends Logging {
     try {
       client.putRecord(request)
     } catch {
-      case e => log.error(s"Could not post to kinesis stream ${e.getMessage} ${e.getStackTrace}")
+      case e: Throwable => log.error(s"Could not post to kinesis stream ${kinesisStreamName} ${e.getMessage} ${e.getStackTrace}")
     }
   }
 
