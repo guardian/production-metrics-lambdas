@@ -17,8 +17,7 @@ object KinesisWriter extends Logging {
   def write(event: KinesisEvent) = {
     val eventJson = event.asJson
     val eventString = eventJson.toString()
-    postToKinesis(eventString, kinesisStreamNamePROD)
-    postToKinesis(eventString, kinesisStreamNameDEV)
+    postToKinesis(eventString, kinesisStreamName)
   }
 
   private def postToKinesis(event: String, kinesisStreamName: String) = {
