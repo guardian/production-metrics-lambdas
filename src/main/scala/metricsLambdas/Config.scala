@@ -31,7 +31,7 @@ object Config {
 
   private def loadConfig = {
     val s3Client = createS3Client(region, awsCredentialsProvider)
-    val configPath = "production-metrics-lambdas/config.properties"
+    val configPath = s"production-metrics-lambdas/${stage}/config.properties"
     val configInputStream = s3Client.getObject("guconf-flexible", configPath)
     val context = configInputStream.getObjectContent
     val properties: Properties = new Properties()
