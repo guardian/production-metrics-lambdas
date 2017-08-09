@@ -15,6 +15,8 @@ object Config {
 
   val region = Option(System.getenv("AWS_DEFAULT_REGION")).map(Regions.fromName).getOrElse(Regions.EU_WEST_1)
 
+  val stage = Option(System.getenv("Stage")).getOrElse("CODE").toUpperCase
+
   val awsCredentialsProvider = new AWSCredentialsProviderChain(
     new EnvironmentVariableCredentialsProvider(),
     new ProfileCredentialsProvider("composer"),
@@ -29,7 +31,7 @@ object Config {
 
   private def loadConfig = {
     val s3Client = createS3Client(region, awsCredentialsProvider)
-    val configPath = "production-metrics-lambdas/config.properties"
+    val configPath = s"production-metrics-lambdas/${stage}/config.properties"
     val configInputStream = s3Client.getObject("guconf-flexible", configPath)
     val context = configInputStream.getObjectContent
     val properties: Properties = new Properties()
