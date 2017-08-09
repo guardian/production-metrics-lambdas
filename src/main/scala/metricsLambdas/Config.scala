@@ -15,6 +15,8 @@ object Config {
 
   val region = Option(System.getenv("AWS_DEFAULT_REGION")).map(Regions.fromName).getOrElse(Regions.EU_WEST_1)
 
+  val stage = Option(System.getenv("Stage")).getOrElse("CODE").toUpperCase
+
   val awsCredentialsProvider = new AWSCredentialsProviderChain(
     new EnvironmentVariableCredentialsProvider(),
     new ProfileCredentialsProvider("composer"),
