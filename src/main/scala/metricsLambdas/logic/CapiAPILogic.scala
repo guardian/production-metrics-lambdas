@@ -15,6 +15,7 @@ import scala.concurrent.duration._
 import io.circe.syntax._
 import io.circe.generic.auto._
 import org.joda.time.{DateTime, DateTimeZone}
+import scala.language.postfixOps
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -38,17 +39,20 @@ object CapiAPILogic extends Logging {
 
   def numberOfPages: Future[Int] = client.getResponse(searchQuery()).map(_.pages)
 
-  def getArticles(acc: Future[Seq[Content]] = Future(Seq.empty), pageNumber: Int): Future[Seq[Content]] =
-    if(pageNumber < 1) acc else {
-      val articleList = client.getResponse(searchQuery(Some(pageNumber))).flatMap(response => acc.map(_ ++ response.results))
-      getArticles(articleList, pageNumber - 1)
+  def getArticles(acc: Future[Seq[Content]] = Future(Seq.empty), pageNumber: Int = 1, totalPages: Int): Future[Seq[Content]] = {
+    if (pageNumber > totalPages) acc else {
+      val articleList = client.getResponse(searchQuery(Some(pageNumber))).flatMap(response => {
+        log.info(s"Content API response status: ${response.status}.")
+        if (response.status == "ok") acc.map(_ ++ response.results) else acc
+      })
+      getArticles(articleList, pageNumber + 1, totalPages)
     }
-
+  }
 
   def collectYesterdaysCapiData = {
     val response = for {
       pages <- numberOfPages
-      articles <- getArticles(pageNumber = pages)
+      articles <- getArticles(totalPages = pages)
       kinesisEvents = transformArticlesToKinesisEvents(articles)
     } yield postArticlesToKinesis(kinesisEvents)
     Await.ready(response, 300 seconds)
