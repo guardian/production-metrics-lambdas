@@ -9,13 +9,10 @@ import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem.{Compose
 import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, OriginatingSystem}
 import metricsLambdas.Config._
 import metricsLambdas.{KinesisWriter, Logging}
-
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
+import scala.concurrent. Future
 import io.circe.syntax._
 import io.circe.generic.auto._
 import org.joda.time.{DateTime, DateTimeZone}
-import scala.language.postfixOps
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -49,14 +46,12 @@ object CapiAPILogic extends Logging {
     }
   }
 
-  def collectYesterdaysCapiData = {
-    val response = for {
+  def collectYesterdaysCapiData =
+    for {
       pages <- numberOfPages
       articles <- getArticles(totalPages = pages)
       kinesisEvents = transformArticlesToKinesisEvents(articles)
     } yield postArticlesToKinesis(kinesisEvents)
-    Await.ready(response, 300 seconds)
-  }
 
   def transformArticlesToKinesisEvents(articles: Seq[Content]): Seq[KinesisEvent] = {
     log.info(s"Total number of articles: ${articles.length}")
