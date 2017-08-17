@@ -24,7 +24,13 @@ object CapiAPILogic extends Logging {
 
   def searchQuery(pageNumber: Option[Int] = None): SearchQuery = {
     val timePeriod = get24HourTimePeriod
-    val query = SearchQuery().fromDate(timePeriod.startDate).toDate(timePeriod.endDate).pageSize(200).showFields("all").showTags("all").boolParam("show-debug", true)
+    val query = SearchQuery()
+      .fromDate(timePeriod.startDate)
+      .toDate(timePeriod.endDate)
+      .pageSize(200)
+      .showFields("creationDate,internalComposerCode,internalOctopusCode")
+      .showTags("newspaper-book,tracking")
+      .boolParam("show-debug", true)
     pageNumber.fold(query)(query.page(_))
   }
 
