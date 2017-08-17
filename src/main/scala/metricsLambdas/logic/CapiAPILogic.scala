@@ -9,9 +9,7 @@ import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem.{Compose
 import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, OriginatingSystem}
 import metricsLambdas.Config._
 import metricsLambdas.{KinesisWriter, Logging}
-
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
+import scala.concurrent. Future
 import io.circe.syntax._
 import io.circe.generic.auto._
 import org.joda.time.{DateTime, DateTimeZone}
@@ -26,7 +24,13 @@ object CapiAPILogic extends Logging {
 
   def searchQuery(pageNumber: Option[Int] = None): SearchQuery = {
     val timePeriod = get24HourTimePeriod
-    val query = SearchQuery().fromDate(timePeriod.startDate).toDate(timePeriod.endDate).pageSize(200).showFields("all").showTags("all").boolParam("show-debug", true)
+    val query = SearchQuery()
+      .fromDate(timePeriod.startDate)
+      .toDate(timePeriod.endDate)
+      .pageSize(200)
+      .showFields("creationDate,internalComposerCode,internalOctopusCode")
+      .showTags("newspaper-book,tracking")
+      .boolParam("show-debug", true)
     pageNumber.fold(query)(query.page(_))
   }
 
@@ -38,21 +42,22 @@ object CapiAPILogic extends Logging {
 
   def numberOfPages: Future[Int] = client.getResponse(searchQuery()).map(_.pages)
 
-  def getArticles(acc: Future[Seq[Content]] = Future(Seq.empty), pageNumber: Int): Future[Seq[Content]] =
-    if(pageNumber < 1) acc else {
-      val articleList = client.getResponse(searchQuery(Some(pageNumber))).flatMap(response => acc.map(_ ++ response.results))
-      getArticles(articleList, pageNumber - 1)
+  def getArticles(acc: Future[Seq[Content]] = Future(Seq.empty), pageNumber: Int = 1, totalPages: Int): Future[Seq[Content]] = {
+    if (pageNumber > totalPages) acc else {
+      val articleList = client.getResponse(searchQuery(Some(pageNumber))).flatMap(response => {
+        log.info(s"Content API response status: ${response.status}.")
+        if (response.status == "ok") acc.map(_ ++ response.results) else acc
+      })
+      getArticles(articleList, pageNumber + 1, totalPages)
     }
+  }
 
-
-  def collectYesterdaysCapiData = {
-    val response = for {
+  def collectYesterdaysCapiData =
+    for {
       pages <- numberOfPages
-      articles <- getArticles(pageNumber = pages)
+      articles <- getArticles(totalPages = pages)
       kinesisEvents = transformArticlesToKinesisEvents(articles)
     } yield postArticlesToKinesis(kinesisEvents)
-    Await.ready(response, 300 seconds)
-  }
 
   def transformArticlesToKinesisEvents(articles: Seq[Content]): Seq[KinesisEvent] = {
     log.info(s"Total number of articles: ${articles.length}")
