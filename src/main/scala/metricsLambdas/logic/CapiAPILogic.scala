@@ -6,10 +6,11 @@ import com.gu.contentapi.client.model.v1.TagType.{NewspaperBook, Tracking}
 import com.gu.contentapi.client.model.v1.{Content, Debug, Tag, TagType}
 import com.gu.editorialproductionmetricsmodels.models.EventType.CapiContent
 import com.gu.editorialproductionmetricsmodels.models.OriginatingSystem.{Composer, InCopy}
-import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, OriginatingSystem}
+import com.gu.editorialproductionmetricsmodels.models.{CapiData, KinesisEvent, OriginatingSystem, ProductionOffice}
 import metricsLambdas.Config._
 import metricsLambdas.{KinesisWriter, Logging}
-import scala.concurrent. Future
+
+import scala.concurrent.Future
 import io.circe.syntax._
 import io.circe.generic.auto._
 import org.joda.time.{DateTime, DateTimeZone}
@@ -79,13 +80,15 @@ object CapiAPILogic extends Logging {
       commissioningDesk <- getTagByType(article.tags, Tracking)
       debugFields <- article.debug
       startingSystem = getOriginatingSystem(debugFields)
+      productionOffice = fields.productionOffice.map(_.name).getOrElse("")
     } yield CapiData(
         composerId = composerId,
         storyBundleId = storyBundleId,
         newspaperBookTag = newspaperBookTag,
         creationDate = creationDate.iso8601,
         commissioningDesk = commissioningDesk,
-        originatingSystem = startingSystem)
+        originatingSystem = startingSystem,
+        productionOffice = ProductionOffice.withNameOption(productionOffice))
 
     capiData.fold[Option[KinesisEvent]]({
       log.info(s"Failed to transform CAPI article to CapiData with ID: ${article.id}")
