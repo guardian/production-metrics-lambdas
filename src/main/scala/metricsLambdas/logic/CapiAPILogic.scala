@@ -80,7 +80,7 @@ object CapiAPILogic extends Logging {
       commissioningDesk <- getTagByType(article.tags, Tracking)
       debugFields <- article.debug
       startingSystem = getOriginatingSystem(debugFields)
-      productionOffice = fields.productionOffice.map(_.name).getOrElse("")
+      productionOffice = fields.productionOffice.map(_.name.toLowerCase).getOrElse("")
     } yield CapiData(
         composerId = composerId,
         storyBundleId = storyBundleId,
