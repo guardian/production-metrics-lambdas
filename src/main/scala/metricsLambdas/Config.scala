@@ -2,10 +2,10 @@ package metricsLambdas
 
 import java.util.Properties
 
-import com.amazonaws.auth.{AWSCredentialsProviderChain, DefaultAWSCredentialsProviderChain, EnvironmentVariableCredentialsProvider, InstanceProfileCredentialsProvider}
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
+import com.amazonaws.auth.{AWSCredentialsProviderChain, DefaultAWSCredentialsProviderChain, EnvironmentVariableCredentialsProvider, InstanceProfileCredentialsProvider}
 import com.amazonaws.regions.Regions
-import resources.AWSClientFactory._
+import metricsLambdas.resources.AWSClientFactory._
 
 import scala.util.Try
 
@@ -13,9 +13,9 @@ object Config {
 
   private lazy val config = loadConfig
 
-  val region = Option(System.getenv("AWS_DEFAULT_REGION")).map(Regions.fromName).getOrElse(Regions.EU_WEST_1)
+  val region: Regions = Option(System.getenv("AWS_DEFAULT_REGION")).map(Regions.fromName).getOrElse(Regions.EU_WEST_1)
 
-  val stage = Option(System.getenv("Stage")).getOrElse("DEV").toUpperCase
+  val stage: String = Option(System.getenv("Stage")).getOrElse("DEV").toUpperCase
 
   val awsCredentialsProvider = new AWSCredentialsProviderChain(
     new EnvironmentVariableCredentialsProvider(),
@@ -24,14 +24,14 @@ object Config {
     new DefaultAWSCredentialsProviderChain
   )
 
-  val capiUrl = getConfig("capi.live.internal.url")
-  val capiKey = getConfig("capi.key")
+  val capiUrl: String = getConfig("capi.live.internal.url")
+  val capiKey: String = getConfig("capi.key")
 
-  val kinesisStreamName = getConfig("kinesis.publishingMetricsStream")
+  val kinesisStreamName: String = getConfig("kinesis.publishingMetricsStream")
 
   private def loadConfig = {
     val s3Client = createS3Client(region, awsCredentialsProvider)
-    val configPath = s"production-metrics-lambdas/${stage}/config.properties"
+    val configPath = s"production-metrics-lambdas/$stage/config.properties"
     val configInputStream = s3Client.getObject("guconf-flexible", configPath)
     val context = configInputStream.getObjectContent
     val properties: Properties = new Properties()
@@ -39,6 +39,6 @@ object Config {
     properties
   }
 
-  def getConfig(property: String) = Option(config.getProperty(property)) getOrElse sys.error(s"'$property' property missing.")
+  private def getConfig(property: String) = Option(config.getProperty(property)) getOrElse sys.error(s"'$property' property missing.")
 
 }
