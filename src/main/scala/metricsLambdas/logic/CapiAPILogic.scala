@@ -37,7 +37,7 @@ object CapiAPILogic extends Logging {
       .fromDate(timePeriod.startDate)
       .toDate(timePeriod.endDate)
       .pageSize(200)
-      .showFields("creationDate,internalComposerCode,internalOctopusCode,productionOffice")
+      .showFields("creationDate,internalComposerCode,internalOctopusCode,productionOffice,firstPublicationDate")
       .showTags("newspaper-book,tracking")
       .boolParam("show-debug", true)
     pageNumber.fold(query)(query.page(_))
@@ -77,6 +77,7 @@ object CapiAPILogic extends Logging {
       composerId <- fields.internalComposerCode
       storyBundleId = fields.internalOctopusCode
       creationDate <- fields.creationDate
+      publicationDate <- fields.firstPublicationDate
       newspaperBookTag = getTagByType(article.tags, NewspaperBook)
       commissioningDesk <- getTagByType(article.tags, Tracking)
       debugFields <- article.debug
@@ -87,6 +88,7 @@ object CapiAPILogic extends Logging {
         storyBundleId = storyBundleId,
         newspaperBookTag = newspaperBookTag,
         creationDate = creationDate.iso8601,
+        firstPublicationDate = publicationDate.iso8601,
         commissioningDesk = commissioningDesk,
         originatingSystem = startingSystem,
         productionOffice = ProductionOffice.withNameOption(productionOffice))
