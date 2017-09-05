@@ -3,16 +3,17 @@ package metricsLambdas
 import java.nio.ByteBuffer
 import java.util.UUID
 
+import com.amazonaws.services.kinesis.AmazonKinesis
 import com.amazonaws.services.kinesis.model.PutRecordRequest
 import com.gu.editorialproductionmetricsmodels.models.KinesisEvent
-import io.circe.syntax._
 import io.circe.generic.auto._
+import io.circe.syntax._
+import metricsLambdas.Config._
 import metricsLambdas.resources.AWSClientFactory
-import Config._
 
 object KinesisWriter extends Logging {
 
-  lazy val client = AWSClientFactory.createKinesisClient
+  private lazy val client: AmazonKinesis = AWSClientFactory.createKinesisClient
 
   def write(event: KinesisEvent) = {
     val eventJson = event.asJson
@@ -30,7 +31,7 @@ object KinesisWriter extends Logging {
     try {
       client.putRecord(request)
     } catch {
-      case e: Throwable => log.error(s"Could not post to kinesis stream ${kinesisStreamName} ${e.getMessage} ${e.getStackTrace}")
+      case e: Throwable => log.error(s"Could not post to kinesis stream $kinesisStreamName ${e.getMessage} ${e.getStackTrace}")
     }
   }
 
