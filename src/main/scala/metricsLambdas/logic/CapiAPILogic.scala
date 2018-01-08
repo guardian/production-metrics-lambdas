@@ -38,7 +38,8 @@ object CapiAPILogic extends Logging {
       .fromDate(timePeriod.startDate)
       .toDate(timePeriod.endDate)
       .pageSize(200)
-      .showFields("creationDate,internalComposerCode,internalOctopusCode,productionOffice,firstPublicationDate,wordCount")
+      .showFields("creationDate,internalComposerCode,internalOctopusCode,productionOffice,firstPublicationDate," +
+        "wordcount,internalCommissionedWordcount")
       .showTags("newspaper-book,tracking")
       .boolParam("show-debug", true)
     pageNumber.fold(query)(query.page(_))
