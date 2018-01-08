@@ -12,11 +12,12 @@ import io.circe.syntax._
 import metricsLambdas.Config._
 import metricsLambdas.{KinesisWriter, Logging}
 import org.joda.time.{DateTime, DateTimeZone}
+import java.time.Instant
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-case class TimePeriod(startDate: DateTime, endDate: DateTime)
+case class TimePeriod(startDate: Instant, endDate: Instant)
 
 object CapiAPILogic extends Logging {
 
@@ -46,7 +47,7 @@ object CapiAPILogic extends Logging {
   private def get24HourTimePeriod: TimePeriod = {
     val endDate = new DateTime(DateTimeZone.UTC).withTimeAtStartOfDay()
     val startDate = endDate.minusDays(1)
-    TimePeriod(startDate, endDate)
+    TimePeriod(Instant.ofEpochMilli(startDate.getMillis), Instant.ofEpochMilli(endDate.getMillis))
   }
 
   private def numberOfPages: Future[Int] = client.getResponse(searchQuery()).map(_.pages)
