@@ -18,8 +18,8 @@ libraryDependencies ++= Seq(
   "io.circe"          %% "circe-generic"                    % "0.7.0",
   "com.beachape"      %% "enumeratum-circe"                 % "1.5.14",
   "com.amazonaws"     % "amazon-kinesis-client"             % "1.7.6",
-  "com.gu"            %% "content-api-client"               % "11.22",
-  "com.gu"            %% "editorial-production-metrics-lib" % "0.10"
+  "com.gu"            %% "content-api-client"               % "11.48",
+  "com.gu"            %% "editorial-production-metrics-lib" % "0.16"
 )
 
 enablePlugins(JavaAppPackaging, RiffRaffArtifact)
