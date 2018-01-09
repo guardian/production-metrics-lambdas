@@ -39,7 +39,7 @@ object CapiAPILogic extends Logging {
       .toDate(timePeriod.endDate)
       .pageSize(200)
       .showFields("creationDate,internalComposerCode,internalOctopusCode,productionOffice,firstPublicationDate," +
-        "wordcount,internalCommissionedWordcount")
+        "wordcount,internalCommissionedWordcount,headline")
       .showTags("newspaper-book,tracking")
       .boolParam("show-debug", true)
     pageNumber.fold(query)(query.page(_))
@@ -88,6 +88,7 @@ object CapiAPILogic extends Logging {
       wordCount = fields.wordcount
       path = article.id
       commissionedWordCount = None
+      headline = fields.headline
     } yield CapiData(
         composerId = composerId,
         storyBundleId = storyBundleId,
@@ -99,8 +100,8 @@ object CapiAPILogic extends Logging {
         productionOffice = ProductionOffice.withNameOption(productionOffice),
         wordCount = wordCount,
         path = path,
-        commissionedWordCount = commissionedWordCount
-      )
+        commissionedWordCount = commissionedWordCount,
+        headline = headline)
 
     capiData.fold[Option[KinesisEvent]]({
       log.info(s"Failed to transform CAPI article to CapiData with ID: ${article.id}")
