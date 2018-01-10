@@ -87,7 +87,7 @@ object CapiAPILogic extends Logging {
       productionOffice = fields.productionOffice.map(_.name.toLowerCase).getOrElse("")
       wordCount = fields.wordcount
       path = article.id
-      commissionedWordCount = None
+      commissionedWordCount = fields.internalCommissionedWordcount
       headline = fields.headline
     } yield CapiData(
         composerId = composerId,
