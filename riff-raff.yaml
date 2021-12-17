@@ -1,16 +1,11 @@
 regions: [eu-west-1]
 stacks: [flexible]
-templates:
-  lambda:
-    type: aws-lambda
+deployments:
+  production-metrics-lambdas:
+    tyoe: aws-lambda
     parameters:
       bucket: composer-dist
       prefixStack: false
-deployments:
-  production-metrics-lambdas:
-    template: lambda
-    contentDirectory: production-metrics-lambdas
-    parameters:
-      fileName: production-metrics-lambdas.zip
+      fileName: production-metrics-lambdas.jar
       functionNames:
-       - "flexible-production-metrics-lambdas-query-capi-"
+        - "flexible-production-metrics-lambdas-query-capi-"
