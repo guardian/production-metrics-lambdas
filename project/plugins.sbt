@@ -1,3 +1,3 @@
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.2.0")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "1.1.0")
 
-addSbtPlugin("com.gu" % "sbt-riffraff-artifact" % "0.9.7")
+addSbtPlugin("com.gu" % "sbt-riffraff-artifact" % "1.1.18")
