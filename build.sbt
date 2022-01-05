@@ -11,7 +11,6 @@ libraryDependencies ++= Seq(
   "com.amazonaws"     % "aws-java-sdk-cloudwatch"           % "1.11.163",
   "com.amazonaws"     % "aws-java-sdk-s3"                   % "1.11.163",
   "com.amazonaws"     % "aws-java-sdk-config"               % "1.11.163",
-  "com.amazonaws"     % "aws-lambda-java-log4j2"            % "1.5.1",
   "org.slf4j"         % "slf4j-simple"                      % "1.7.32",
   "com.typesafe.play" %% "play-ws"                          % "2.5.16",
   "io.circe"          %% "circe-parser"                     % "0.7.0",
