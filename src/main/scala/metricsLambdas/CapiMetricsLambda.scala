@@ -14,7 +14,7 @@ class CapiMetricsLambda extends Logging{
   }
 
   def collectMetrics = {
-    Await.ready(CapiAPILogic.collectYesterdaysCapiData, 300 seconds)
+    Await.ready(CapiAPILogic.collectYesterdaysCapiData, 300.seconds)
     log.info("Running the Capi Metrics Lambda.")
   }
 

@@ -1,6 +1,5 @@
 package metricsLambdas.logic
 
-import com.gu.contentapi.client.GuardianContentClient
 import com.gu.contentapi.client.model.SearchQuery
 import com.gu.contentapi.client.model.v1.TagType.{NewspaperBook, Tracking}
 import com.gu.contentapi.client.model.v1.{Content, Debug, Tag, TagType}
@@ -108,7 +107,7 @@ object CapiAPILogic extends Logging {
       None})(data => Some(KinesisEvent(CapiContent, data.asJson)))
   }
 
-  private def getTagByType(tags: Seq[Tag], tagType: TagType): Option[String] =
+  private def getTagByType(tags: scala.collection.Seq[Tag], tagType: TagType): Option[String] =
     tags.collectFirst{case tag: Tag if tag.`type` == tagType => tag.id}
 
   private def getOriginatingSystem(debugFields: Debug) =
