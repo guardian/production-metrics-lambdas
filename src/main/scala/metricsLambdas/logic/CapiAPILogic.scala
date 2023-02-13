@@ -1,5 +1,6 @@
 package metricsLambdas.logic
 
+import com.gu.contentapi.client.GuardianContentClient
 import com.gu.contentapi.client.model.SearchQuery
 import com.gu.contentapi.client.model.v1.TagType.{NewspaperBook, Tracking}
 import com.gu.contentapi.client.model.v1.{Content, Debug, Tag, TagType}
@@ -11,8 +12,8 @@ import io.circe.syntax._
 import metricsLambdas.Config._
 import metricsLambdas.{KinesisWriter, Logging}
 import org.joda.time.{DateTime, DateTimeZone}
-import java.time.Instant
 
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
