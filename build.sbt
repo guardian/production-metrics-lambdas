@@ -5,7 +5,7 @@ version := "1.0"
 
 ThisBuild / scalaVersion := "2.13.10"
 
-lazy val awsVersion = "1.12.401"
+lazy val awsVersion = "1.12.405"
 
 libraryDependencies ++= Seq(
   "com.amazonaws"     %  "aws-lambda-java-core"             % "1.2.2",
@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
   "com.beachape"      %% "enumeratum-circe"                 % "1.7.2",
   "com.amazonaws"     %  "amazon-kinesis-client"            % "1.14.9",
   "com.gu"            %% "content-api-client"               % "19.2.0",
-  "com.gu"            %% "editorial-production-metrics-lib" % "0.20-SNAPSHOT"
+  "com.gu"            %% "editorial-production-metrics-lib" % "0.20"
 )
 
 enablePlugins(JavaAppPackaging, RiffRaffArtifact)
