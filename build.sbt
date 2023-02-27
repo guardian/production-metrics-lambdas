@@ -1,33 +1,29 @@
 name := "production-metrics-lambdas"
-organization  := "com.gu"
+organization := "com.gu"
 
 version := "1.0"
 
-scalaVersion in ThisBuild := "2.11.11"
+ThisBuild / scalaVersion := "2.13.10"
+
+lazy val awsVersion = "1.12.405"
 
 libraryDependencies ++= Seq(
-  "com.amazonaws"     % "aws-lambda-java-core"              % "1.1.0",
-  "com.amazonaws"     % "aws-java-sdk-lambda"               % "1.11.163",
-  "com.amazonaws"     % "aws-java-sdk-cloudwatch"           % "1.11.163",
-  "com.amazonaws"     % "aws-java-sdk-s3"                   % "1.11.163",
-  "com.amazonaws"     % "aws-java-sdk-config"               % "1.11.163",
-  "org.slf4j"         % "slf4j-simple"                      % "1.7.32",
-  "com.typesafe.play" %% "play-ws"                          % "2.5.16",
-  "io.circe"          %% "circe-parser"                     % "0.7.0",
-  "io.circe"          %% "circe-generic"                    % "0.7.0",
-  "com.beachape"      %% "enumeratum-circe"                 % "1.5.14",
-  "com.amazonaws"     % "amazon-kinesis-client"             % "1.7.6",
-  "com.gu"            %% "content-api-client"               % "11.48",
-  "com.gu"            %% "editorial-production-metrics-lib" % "0.17"
+  "com.amazonaws" % "aws-lambda-java-core" % "1.2.2",
+  "com.amazonaws" % "aws-java-sdk-lambda" % awsVersion,
+  "com.amazonaws" % "aws-java-sdk-cloudwatch" % awsVersion,
+  "com.amazonaws" % "aws-java-sdk-s3" % awsVersion,
+  "com.amazonaws" % "aws-java-sdk-config" % awsVersion,
+  "org.slf4j" % "slf4j-simple" % "2.0.5",
+  "com.beachape" %% "enumeratum-circe" % "1.7.2",
+  "com.amazonaws" % "amazon-kinesis-client" % "1.14.9",
+  "com.gu" %% "content-api-client-default" % "19.2.0",
+  "com.gu" %% "editorial-production-metrics-lib" % "0.20"
 )
 
 enablePlugins(JavaAppPackaging, RiffRaffArtifact)
 
-topLevelDirectory in Universal := None
-packageName in Universal := normalizedName.value
+Universal / topLevelDirectory := None
+Universal / packageName := normalizedName.value
 
-riffRaffPackageType := (packageBin in Universal).value
-riffRaffUploadArtifactBucket := Option("riffraff-artifact")
-riffRaffUploadManifestBucket := Option("riffraff-builds")
-riffRaffManifestProjectName :=  s"editorial-tools:${name.value}"
-riffRaffBuildIdentifier :=  Option(System.getenv("BUILD_NUMBER")).getOrElse("DEV")
+riffRaffPackageType := (Universal / packageBin).value
+riffRaffManifestProjectName := s"editorial-tools:${name.value}"

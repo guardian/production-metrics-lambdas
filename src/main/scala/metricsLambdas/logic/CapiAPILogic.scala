@@ -12,8 +12,8 @@ import io.circe.syntax._
 import metricsLambdas.Config._
 import metricsLambdas.{KinesisWriter, Logging}
 import org.joda.time.{DateTime, DateTimeZone}
-import java.time.Instant
 
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -108,7 +108,7 @@ object CapiAPILogic extends Logging {
       None})(data => Some(KinesisEvent(CapiContent, data.asJson)))
   }
 
-  private def getTagByType(tags: Seq[Tag], tagType: TagType): Option[String] =
+  private def getTagByType(tags: scala.collection.Seq[Tag], tagType: TagType): Option[String] =
     tags.collectFirst{case tag: Tag if tag.`type` == tagType => tag.id}
 
   private def getOriginatingSystem(debugFields: Debug) =
